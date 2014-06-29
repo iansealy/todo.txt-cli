@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+action=$1
+shift
+
+[ "$action" = "usage" ] && {
+    echo "    edit [todo|done|ITEM#]"
+    echo "      Edit the todo.txt or done.txt files with $EDITOR or nano."
+    echo "      Or edit todo.txt line ITEM#."
+    echo ""
+    exit
+}
+
+TODO_EDITOR=${EDITOR:-nano}
+
+TODO_EDIT_FILE="$TODO_FILE"
+TODO_EDIT_LINE=
+
+if [[ "$1" = "done" ]]; then
+    TODO_EDIT_FILE="$DONE_FILE"
+elif [[ "$1" =~ ^[[:digit:]]+$ ]]; then
+    TODO_EDIT_FILE="$TODO_FILE"
+    TODO_EDIT_LINE="+$1"
+fi
+
+"$TODO_EDITOR" $TODO_EDIT_LINE "$TODO_EDIT_FILE"
