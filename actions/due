@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+action=$1
+shift
+
+[ "$action" = "usage" ] && {
+    echo "    due [TERM...]"
+    echo "      Display all tasks with a due date that contain TERM(s) grouped"
+    echo "      by due date."
+    echo ""
+    exit
+}
+
+TODOTXT_VERBOSE=0
+
+YESTERDAY=`date --date=yesterday +%F`
+TODAY=`date +%F`
+TOMORROW=`date --date=tomorrow +%F`
+
+REGEXP='due:[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}'
+
+past_list=
+yesterday_list=
+today_list=
+tomorrow_list=
+future_list=
+
+while read line
+do
+    due=$(echo "$line" | grep -o -E "$REGEXP" | sed -e 's/^due://')
+    if [[ "$due" = "$TODAY" ]]; then
+        today_list+="$line\n"
+    elif [[ "$due" = "$YESTERDAY" ]]; then
+        yesterday_list+="$line\n"
+    elif [[ "$due" = "$TOMORROW" ]]; then
+        tomorrow_list+="$line\n"
+    elif [[ "$due" < "$YESTERDAY" ]]; then
+        past_list+="$line\n"
+    elif [[ "$due" > "$TOMORROW" ]]; then
+        future_list+="$line\n"
+    fi
+done < <(_list "$TODO_FILE" "$@" | grep -E "$REGEXP")
+
+echo "=====  Due  ====="
+if [[ -n "$past_list" ]]; then
+    echo -e "\n---    Past     ---"
+    echo -ne "$past_list"
+fi
+if [[ -n "$yesterday_list" ]]; then
+    echo -e "\n---  Yesterday  ---"
+    echo -ne "$yesterday_list"
+fi
+if [[ -n "$today_list" ]]; then
+    echo -e "\n---    Today    ---"
+    echo -ne "$today_list"
+fi
+if [[ -n "$tomorrow_list" ]]; then
+    echo -e "\n---  Tomorrow   ---"
+    echo -ne "$tomorrow_list"
+fi
+if [[ -n "$future_list" ]]; then
+    echo -e "\n---   Future    ---"
+    echo -ne "$future_list"
+fi
