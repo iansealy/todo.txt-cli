@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+action=$1
+shift
+
+[ "$action" = "usage" ] && {
+    echo "    projectview|pv [TERM...]"
+    echo "      Display all tasks that contain TERM(s) grouped by project."
+    echo ""
+    exit
+}
+
+TODOTXT_VERBOSE=0
+
+echo "=====  Projects  ====="
+PROJECTS=$(grep -o ' +[^ ]\+' "$TODO_FILE" | sort -u | sed -e 's/ +//')
+
+for project in $PROJECTS; do
+    project_list=$(_list "$TODO_FILE" "+$project")
+    if [[ -n "$project_list" ]]; then
+        echo -e "\n---  $project  ---"
+        echo -ne "$project_list\n"
+    fi
+done
+
+NO_PROJECT_LIST=$(_list "$TODO_FILE" | grep -v '\b+[^ ]\+')
+if [[ -n "$NO_PROJECT_LIST" ]]; then
+    echo -e "\n---  No project  ---"
+    echo -ne "$NO_PROJECT_LIST\n"
+fi
