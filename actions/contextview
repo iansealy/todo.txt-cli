@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+action=$1
+shift
+
+[ "$action" = "usage" ] && {
+    echo "    contextview|cv [TERM...]"
+    echo "      Display all tasks that contain TERM(s) grouped by context."
+    echo ""
+    exit
+}
+
+TODOTXT_VERBOSE=0
+
+echo "=====  Contexts  ====="
+CONTEXTS=$(grep -o ' @[^ ]\+' "$TODO_FILE" | sort -u | sed -e 's/ @//')
+
+for context in $CONTEXTS; do
+    context_list=$(_list "$TODO_FILE" "@$context")
+    if [[ -n "$context_list" ]]; then
+        echo -e "\n---  $context  ---"
+        echo -ne "$context_list\n"
+    fi
+done
+
+NO_CONTEXT_LIST=$(_list "$TODO_FILE" | grep -v '\b@[^ ]\+')
+if [[ -n "$NO_CONTEXT_LIST" ]]; then
+    echo -e "\n---  No context  ---"
+    echo -ne "$NO_CONTEXT_LIST\n"
+fi
