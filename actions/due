@@ -41,6 +41,28 @@ do
     fi
 done < <(_list "$TODO_FILE" "$@" | grep -E "$REGEXP")
 
+sortDueList()
+{
+    list="$1"
+
+    prefixed_list=
+    i=0
+
+    while read line
+    do
+        if [[ -n "$line" ]]; then
+            due=$(echo "$line" | grep -o -E "$REGEXP")
+            ((i++))
+            prefixed_list+="$due $i $line\n"
+        fi
+    done < <(echo -e "$list")
+
+    echo -ne "$prefixed_list" | sort -f -n | sed -E "s/^$REGEXP [[:digit:]]+ //"
+}
+
+past_list=$(sortDueList "$past_list")
+future_list=$(sortDueList "$future_list")
+
 showDueList()
 {
     list="$1"
@@ -53,8 +75,8 @@ showDueList()
 }
 
 echo "=====  Due  ====="
-showDueList "$past_list" "  Past   "
+showDueList "$past_list\n" "  Past   "
 showDueList "$yesterday_list" "Yesterday"
 showDueList "$today_list" "  Today  "
 showDueList "$tomorrow_list" "Tomorrow "
-showDueList "$future_list" " Future  "
+showDueList "$future_list\n" " Future  "
