@@ -41,24 +41,20 @@ do
     fi
 done < <(_list "$TODO_FILE" "$@" | grep -E "$REGEXP")
 
+showList()
+{
+    list="$1"
+    name="$2"
+
+    if [[ -n "$list" ]]; then
+        echo -e "\n---  $name  ---"
+        echo -ne "$list"
+    fi
+}
+
 echo "=====  Due  ====="
-if [[ -n "$past_list" ]]; then
-    echo -e "\n---    Past     ---"
-    echo -ne "$past_list"
-fi
-if [[ -n "$yesterday_list" ]]; then
-    echo -e "\n---  Yesterday  ---"
-    echo -ne "$yesterday_list"
-fi
-if [[ -n "$today_list" ]]; then
-    echo -e "\n---    Today    ---"
-    echo -ne "$today_list"
-fi
-if [[ -n "$tomorrow_list" ]]; then
-    echo -e "\n---  Tomorrow   ---"
-    echo -ne "$tomorrow_list"
-fi
-if [[ -n "$future_list" ]]; then
-    echo -e "\n---   Future    ---"
-    echo -ne "$future_list"
-fi
+showList "$past_list" "  Past   "
+showList "$yesterday_list" "Yesterday"
+showList "$today_list" "  Today  "
+showList "$tomorrow_list" "Tomorrow "
+showList "$future_list" " Future  "
