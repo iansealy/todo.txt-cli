@@ -41,7 +41,7 @@ do
     fi
 done < <(_list "$TODO_FILE" "$@" | grep -E "$REGEXP")
 
-showList()
+showDueList()
 {
     list="$1"
     name="$2"
@@ -53,8 +53,8 @@ showList()
 }
 
 echo "=====  Due  ====="
-showList "$past_list" "  Past   "
-showList "$yesterday_list" "Yesterday"
-showList "$today_list" "  Today  "
-showList "$tomorrow_list" "Tomorrow "
-showList "$future_list" " Future  "
+showDueList "$past_list" "  Past   "
+showDueList "$yesterday_list" "Yesterday"
+showDueList "$today_list" "  Today  "
+showDueList "$tomorrow_list" "Tomorrow "
+showDueList "$future_list" " Future  "
