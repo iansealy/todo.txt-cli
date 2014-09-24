@@ -68,7 +68,7 @@ showDueList()
     list="$1"
     name="$2"
 
-    if [[ -n "$list" ]]; then
+    if [[ -n "$list" && "$list" != "\n" ]]; then
         echo -e "\n---  $name  ---"
         echo -ne "$list"
     fi
