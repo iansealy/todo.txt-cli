@@ -14,22 +14,47 @@ TODOTXT_VERBOSE=0
 
 YESTERDAY=`date --date=yesterday +%F`
 TODAY=`date +%F`
+WEEK=`date --date="-8 days" +%F`
 
 REGEXP=' x [[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}'
 
 yesterday_count=0
 today_count=0
+week_count=0
+yesterday_list=
+today_list=
+week_list=
 
 while read line
 do
     date=$(echo "$line" | grep -o -E "$REGEXP" | sed -e 's/^ x //')
     if [[ "$date" = "$TODAY" ]]; then
         today_count=$((today_count+1))
+        today_list+="$line\n"
     elif [[ "$date" = "$YESTERDAY" ]]; then
+        yesterday_list+="$line\n"
         yesterday_count=$((yesterday_count+1))
+    fi
+    if [[ "$date" > "$WEEK" && "$date" < "$TODAY" ]]; then
+        week_list+="$line\n"
     fi
 done < <(_list "$DONE_FILE" "$@" | grep -E "$REGEXP")
 
 echo "=====  Done lately  ====="
 echo "$TODAY: $today_count (today)"
 echo "$YESTERDAY: $yesterday_count (yesterday)"
+
+showList()
+{
+    list="$1"
+    name="$2"
+
+    if [[ -n "$list" && "$list" != "\n" ]]; then
+        echo -e "\n---  $name  ---"
+        echo -ne "$list"
+    fi
+}
+
+showList "$today_list" "  Today  "
+showList "$yesterday_list" "Yesterday"
+showList "$week_list" "Last Week"
