@@ -55,6 +55,6 @@ showList()
     fi
 }
 
-showList "$today_list" "  Today  "
-showList "$yesterday_list" "Yesterday"
-showList "$week_list" "Last Week"
+showList "$today_list" "   Today   "
+showList "$yesterday_list" " Yesterday "
+showList "$week_list" "Last 7 Days"
