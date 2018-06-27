@@ -12,11 +12,11 @@ shift
 
 TODOTXT_VERBOSE=0
 
-YESTERDAY=`date --date=yesterday +%F`
+YESTERDAY=`date -v-1d +%F`
 TODAY=`date +%F`
-WEEK=`date --date="-8 days" +%F`
-PREV7START=`date --date="-15 days" +%F`
-PREV7END=`date --date="-7 days" +%F`
+WEEK=`date -v-8d +%F`
+PREV7START=`date -v-15d +%F`
+PREV7END=`date -v-7d +%F`
 
 REGEXP=' x [[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}'
 

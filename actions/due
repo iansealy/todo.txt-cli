@@ -13,9 +13,9 @@ shift
 
 TODOTXT_VERBOSE=0
 
-YESTERDAY=`date --date=yesterday +%F`
+YESTERDAY=`date -v-1d +%F`
 TODAY=`date +%F`
-TOMORROW=`date --date=tomorrow +%F`
+TOMORROW=`date -v+1d +%F`
 
 REGEXP='due:[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}'
 
